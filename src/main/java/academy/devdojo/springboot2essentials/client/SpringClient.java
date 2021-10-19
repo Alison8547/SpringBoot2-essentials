@@ -38,6 +38,24 @@ public class SpringClient {
         ResponseEntity<Anime> exchange1 = new RestTemplate().exchange("http://localhost:8080/animes/", HttpMethod.POST, new HttpEntity<>(zatchbell, createJsonHeader()), Anime.class);
 
         log.info("saved anime {}", exchange1);
+
+        Anime animeToBeUpdated = exchange1.getBody();
+        animeToBeUpdated.setName("Zatchbell 2");
+
+        ResponseEntity<Void> zatchbellUpdate = new RestTemplate().exchange("http://localhost:8080/animes/",
+                HttpMethod.PUT,
+                new HttpEntity<>(animeToBeUpdated, createJsonHeader()),
+                Void.class);
+
+        log.info(zatchbellUpdate);
+
+        ResponseEntity<Void> zatchbellDeleted = new RestTemplate().exchange("http://localhost:8080/animes/{id}",
+                HttpMethod.DELETE,
+                null,
+                Void.class,
+                animeToBeUpdated.getId());
+
+        log.info(zatchbellDeleted);
     }
 
     public static HttpHeaders createJsonHeader() {
